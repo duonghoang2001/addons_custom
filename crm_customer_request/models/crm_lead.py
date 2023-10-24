@@ -13,12 +13,12 @@ class Lead(models.Model):
                                              compute='_compute_total_expected_revenue',
                                              store=True)
     
-    #@api.depends('crm_customer_request.quantity')
+    #@api.depends('crm_customer_request.qty')
     def _compute_total_sale(self):
-        self.total_sale = sum([request.quantity for request in self.request_ids])
+        self.total_sale = sum([request.qty for request in self.request_ids])
 
-    #@api.depends('crm_customer_request.quantity', 'crm_customer_request.product_id', 'product_id.list_price')
+    #@api.depends('crm_customer_request.qty', 'crm_customer_request.product_id', 'product_id.list_price')
     def _compute_total_expected_revenue(self):
-        revenues = [request.quantity * request.product_id.list_price for request in self.request_ids]
+        revenues = [request.qty * request.product_id.list_price for request in self.request_ids]
         self.total_expected_revenue = sum(revenues)
         

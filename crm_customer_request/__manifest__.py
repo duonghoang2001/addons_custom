@@ -28,12 +28,16 @@
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
+        'views/crm_customer_request_views.xml',
+        'views/crm_lead_views.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
+
+    'license': 'LGPL-3',
 }

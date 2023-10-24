@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="crm_lead_view_form" model="ir.ui.view">
+            <field name="name">crm.lead.inherit.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[@name='internal_notes']" position="before">
+                        <page string="Opportunity" name="opportunity">
+                            <tree>
+                                <field name="request_ids" context="{
+                                    'request_ref': 'crm_customer_request.crm_customer_request_form'
+                                }"/>
+                            </tree>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+
+        </record>
+    </data>
+</odoo>

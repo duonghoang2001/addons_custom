@@ -9,9 +9,13 @@ class CustomerRequest(models.Model):
 
     product_id = fields.Many2one('product.template', string='Product', required=True)
     opportunity_id = fields.Many2one('crm.lead', string='Opportunity', required=True)
-    date = fields.Date(required=True, default=fields.Date.today)
-    description = fields.Text()
-    quantity = fields.Float(default=1)
+    date = fields.Date(string='Date', required=True, default=fields.Date.today)
+    description = fields.Text(string='Description')
+    qty = fields.Float(string='Quantity', default=1)
+    
+    crm_lead_id = fields.Many2one('crm.lead', string='Lead')
+    
+    
 
 
     

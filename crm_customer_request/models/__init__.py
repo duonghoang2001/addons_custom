@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
 from . import crm_customer_request
-from . import crm_lead_extend
+from . import crm_lead

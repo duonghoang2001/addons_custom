@@ -27,11 +27,9 @@ class Lead(models.Model):
             lead.total_expected_revenue = sum(revenues)
 
     def _compute_is_new_stage(self):
-        #FIXME: check whether current stage is 'New'
+        # check whether current stage is 'New' (stage_id = 1)
         for lead in self:
             new_stage_id = lead.env.ref('crm.stage_lead1').id
-            record_id = lead.env.ref('crm.crm_lead_view_form').id
-            print('Debug:', new_stage_id, record_id)
-            lead.is_new_stage = new_stage_id == 1
+            lead.is_new_stage = lead.stage_id.id == new_stage_id
     
         

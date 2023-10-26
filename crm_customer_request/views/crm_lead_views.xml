@@ -6,22 +6,19 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_lead_view_form"/>
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//page[@name='internal_notes']" position="before">
-                        <page string="Opportunity" name="opportunity">
-                            <form>
-                                <field name="is_new_stage" invisible="1"/>
-                                <field name="request_ids" 
-                                    context="{'request': 'crm_customer_request'}" 
-                                    attrs="{'readonly':[('is_new_stage','=',False)]}"
-                                    widget="one2many"
-                                    />
-                            </form>
-                        </page>
-                    </xpath>
-                </data>
+                <xpath expr="//page[@name='internal_notes']" position="before">
+                    <page string="Opportunity" name="opportunity">
+                        <form>
+                            <field name="is_new_stage" invisible="1"/>
+                            <field name="request_ids" 
+                                context="{'request': 'crm_customer_request'}" 
+                                attrs="{'readonly':[('is_new_stage','=',False)]}"
+                                widget="one2many"
+                                />
+                        </form>
+                    </page>
+                </xpath>
             </field>
-
         </record>
     </data>
 </odoo>

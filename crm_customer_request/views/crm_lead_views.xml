@@ -15,10 +15,26 @@
                                 attrs="{'readonly':[('is_new_stage','=',False)]}"
                                 widget="one2many"
                                 />
+                            <div>
+                                <span><strong>Total Sale: </strong></span>
+                                <field name="total_sale"/>
+                            </div>
+                            <div>
+                                <span><strong>Total Expected Revenue: </strong></span>
+                                <field name="total_expected_revenue"/>
+                            </div>
                         </form>
                     </page>
                 </xpath>
             </field>
         </record>
+<!--         <record id="action_sale_quotations_new" model="ir.actions.act_window">
+            <field name="name">New Quotation</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">form</field>
+            <field name="state">code</field>
+            <field name="code">action = crm_lead.create_quotaion_from_opporttunity()</field>
+
+        </record> -->
     </data>
 </odoo>

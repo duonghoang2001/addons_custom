@@ -3,7 +3,7 @@
 from odoo import models, fields, api
 
 class Lead(models.Model):
-    _inherit = 'crm.lead'
+    _inherit = ['crm.lead']
 
     request_ids = fields.One2many('crm.customer.request', 'opportunity_id', 
                                   string='Requests')
@@ -16,32 +16,41 @@ class Lead(models.Model):
     
     is_new_stage = fields.Boolean(string='Is New Stage?', compute='_compute_is_new_stage')
     
-    #@api.depends('crm_customer_request.qty')
+    @api.depends('request_ids.qty')
     def _compute_total_sale(self):
         for lead in self:
             lead.total_sale = sum([request.qty for request in lead.request_ids])
 
-    #@api.depends('crm_customer_request.qty', 'crm_customer_request.product_id', 'product_id.list_price')
+    @api.depends('request_ids.qty', 'request_ids.product_id', 'request_ids.product_id.list_price')
     def _compute_total_expected_revenue(self):
         for lead in self:
             revenues = [request.qty * request.product_id.list_price for request in lead.request_ids]
             lead.total_expected_revenue = sum(revenues)
 
     def _compute_is_new_stage(self):
-        # check whether current stage is 'New' (stage_id = 1)
+        # Check whether current stage is 'New' (stage_id = 1)
         for lead in self:
             new_stage_id = lead.env.ref('crm.stage_lead1').id
             lead.is_new_stage = lead.stage_id.id == new_stage_id
-    
-    #@api.depends('crm_customer_request.product_id', 'crm_customer_request.qty')
-    def create_quota(self):
-        #TODO: call it whenever user adds item to Opportunity tab
+
+    def create_quotaion_from_opporttunity(self):
+        # Call the action_sale_quotations_new function
+        action = self.env.ref('sale_crm.action_sale_quotations_new').read()[0]
+        action_context = eval(action['context'])
+        #print('debug', action)
         for lead in self:
-            order_lines = [{'product_template_id': request.product_id, 
-                     'product_uom_qty': request.qty} 
-                     for request in lead.request_ids]
-            order_values = {
-                'partner_id': lead.partner_id.id,
-                'order_line': order_lines
-            }
-            self.env['sale.order'].create(order_values)
+            action_context.update({
+                'default_opportunity_id': lead.opportunity_id.id,
+                'default_opportunity_crm_lead_id': lead.opportunity_id.id,
+                'default_order_line': [(0, 0, {
+                    'product_id': line.product_id,
+                    'product_uom_qty': line.qty,
+                }) for line in lead.request_ids],
+            })
+            action['context'] = action_context
+
+            action_copy = action.copy()
+            self.env['sale.order'].create(action_copy['context'])  # create the quotation
+            #print('debug: here')
+        return True
+        

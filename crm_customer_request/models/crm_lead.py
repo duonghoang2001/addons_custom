@@ -33,24 +33,4 @@ class Lead(models.Model):
             new_stage_id = lead.env.ref('crm.stage_lead1').id
             lead.is_new_stage = lead.stage_id.id == new_stage_id
 
-    def create_quotaion_from_opporttunity(self):
-        # Call the action_sale_quotations_new function
-        action = self.env.ref('sale_crm.action_sale_quotations_new').read()[0]
-        action_context = eval(action['context'])
-        #print('debug', action)
-        for lead in self:
-            action_context.update({
-                'default_opportunity_id': lead.opportunity_id.id,
-                'default_opportunity_crm_lead_id': lead.opportunity_id.id,
-                'default_order_line': [(0, 0, {
-                    'product_id': line.product_id,
-                    'product_uom_qty': line.qty,
-                }) for line in lead.request_ids],
-            })
-            action['context'] = action_context
-
-            action_copy = action.copy()
-            self.env['sale.order'].create(action_copy['context'])  # create the quotation
-            #print('debug: here')
-        return True
-        
+            

@@ -28,13 +28,5 @@
                 </xpath>
             </field>
         </record>
-<!--         <record id="action_sale_quotations_new" model="ir.actions.act_window">
-            <field name="name">New Quotation</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_mode">form</field>
-            <field name="state">code</field>
-            <field name="code">action = crm_lead.create_quotaion_from_opporttunity()</field>
-
-        </record> -->
     </data>
 </odoo>

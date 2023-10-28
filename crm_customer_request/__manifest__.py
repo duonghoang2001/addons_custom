@@ -3,11 +3,11 @@
     'name': "CRM Customer Request",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        CRM Customer Request Addon""",
 
     'description': """
-        Long description of module's purpose
+        Allow user to add requests to a opportunity both manually and via Excel file, 
+        and create quotation with inserted requests
     """,
 
     'author': "Duong Hoang",

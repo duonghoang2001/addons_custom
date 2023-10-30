@@ -3,7 +3,7 @@
 import base64
 import datetime
 import xlrd
-from odoo import models, fields, api
+from odoo import _, models, fields, api
 from odoo.exceptions import UserError
 from odoo.modules.module import get_module_resource
 
@@ -86,12 +86,26 @@ class Lead(models.Model):
     def _create_request_entry(self, record):
         # Search for product ID using product's name
         product_id = self.env['product.template'].search([('name', '=', record[0])], limit=1).id
-        date = datetime.datetime.strptime(record[1], '%d/%m/%Y').date()
-        request_line = {
-            'product_id': product_id,
-            'date': date,
-            'description': record[2],
-            'qty': record[3],
-        }
-        return request_line
+        # Only add valid fields, invalid ones would be left as default values
+        if product_id:
+            request_line = {
+                'product_id': product_id
+            }
+            if record[1]:
+                try:
+                    date = datetime.datetime.strptime(record[1], '%d/%m/%Y').date()
+                    request_line['date'] = date
+                except ValueError:
+                    pass
+                except TypeError:
+                    pass
+            if record[2]:
+                request_line['description'] = record[2]
+            if type(record[3]) in (int, float):
+                request_line['qty'] = record[3]
+                
+            return request_line
+        else:
+            error_message = _("Product %s is not available!", record[0])
+            raise UserError(error_message)
                 

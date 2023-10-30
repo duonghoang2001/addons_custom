@@ -15,12 +15,12 @@
                                 attrs="{'readonly':[('is_new_stage','=',False)]}"
                                 widget="one2many"
                                 />
-                            <div class="o_row">
+                            <div class="o_row" attrs="{'invisible':[('is_new_stage','=',False)]}">
                                 <p>Or add new lines via Excel file:</p>
                                 <button name="download_template" string="Download Template" type="object" class="oe_link oe_right"/>
                                 <field name="excel_file_name" invisible="1"/>
                                 <field name="excel_file" filename="excel_file_name"/>
-                                <button name="import_excels" string="Import" type="object"  class="oe_highlight" />
+                                <button name="import_excels" string="Import" type="object" class="oe_highlight" />
                             </div>
                             <div>
                                 <span><strong>Total Sale: </strong></span>
@@ -31,7 +31,6 @@
                                 <field name="total_expected_revenue"/>
                             </div>    
                         </form>
-                        
                     </page>
                 </xpath>
             </field>

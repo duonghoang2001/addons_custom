@@ -4,7 +4,7 @@
             <field name="name">crm.customer.request.form</field>
             <field name="model">crm.customer.request</field>
             <field name="arch" type="xml">
-                <tree string="Request">
+                <tree string="Request" editable="bottom">
                     <field name="product_id" options="{'no_create':True,'no_create_edit':True,}"/>
                     <field name="opportunity_id"/>
                     <field name="date"/>

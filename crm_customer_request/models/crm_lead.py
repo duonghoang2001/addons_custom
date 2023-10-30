@@ -3,8 +3,8 @@
 import base64
 import datetime
 import xlrd
-from odoo import _, models, fields, api
-from odoo.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
 
 class Lead(models.Model):
@@ -18,7 +18,9 @@ class Lead(models.Model):
                                              currency_field='company_currency',
                                              compute='_compute_total_expected_revenue',
                                              store=True)
+    # Stage
     is_new_stage = fields.Boolean(string='Is New Stage?', compute='_compute_is_new_stage')
+    # Excel file upload/download
     excel_file = fields.Binary(string='Upload File')
     excel_file_name = fields.Char(string='Filename')
     excel_template = fields.Many2one('ir.attachment', string='Request File Template', compute='_compute_excel_template')
@@ -73,7 +75,7 @@ class Lead(models.Model):
                 for row in range(sheet.nrows):
                     if row >= 1:
                         row_values = sheet.row_values(row)
-                        vals = self._create_request_entry(row_values)
+                        vals = self.create_request_entry(row_values)
                         line_vals.append((0, 0, vals))
 
                 if line_vals:
@@ -83,7 +85,7 @@ class Lead(models.Model):
             except IndexError:
                 pass
 
-    def _create_request_entry(self, record):
+    def create_request_entry(self, record):
         # Search for product ID using product's name
         product_id = self.env['product.template'].search([('name', '=', record[0])], limit=1).id
         # Only add valid fields, invalid ones would be left as default values
@@ -103,9 +105,9 @@ class Lead(models.Model):
                 request_line['description'] = record[2]
             if type(record[3]) in (int, float):
                 request_line['qty'] = record[3]
-                
+
             return request_line
         else:
             error_message = _("Product %s is not available!", record[0])
-            raise UserError(error_message)
+            raise ValidationError(error_message)
                 

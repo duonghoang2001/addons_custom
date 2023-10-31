@@ -33,7 +33,7 @@ class Lead(models.Model):
         for lead in self:
             lead.total_sale = sum([request.qty for request in lead.request_ids])
 
-    @api.depends('request_ids.qty', 'request_ids.product_id', 'request_ids.product_id.list_price')
+    @api.depends('request_ids.qty', 'request_ids.product_id.list_price')
     def _compute_total_expected_revenue(self):
         for lead in self:
             revenues = [request.qty * request.product_id.list_price for request in lead.request_ids]
@@ -55,14 +55,13 @@ class Lead(models.Model):
         })
 
     @api.depends('request_ids.description', 'request_ids.date', 'request_ids.qty', 
-                 'request_ids.product_id', 'request_ids.product_id.name',
-                 'request_ids.opportunity_id', 'request_ids.opportunity_id.name')
+                 'request_ids.product_id.name', 'request_ids.opportunity_id.name')
     def _compute_excel_data(self):
         # Save as file object
         in_memory_fp = BytesIO()
         with Workbook(in_memory_fp) as workbook:
             worksheet = workbook.add_worksheet()
-            headers = ['Product', 'Opportunity', 'Date', 'Description', 'Quantity']
+            headers = ['Product', 'Opportunity', 'Date (dd/mm/YYYY)', 'Description', 'Quantity']
             worksheet.write_row(row=0, col=0, data=headers)
             for i in range(len(self.request_ids)):
                 request = self.request_ids[i]
@@ -84,7 +83,7 @@ class Lead(models.Model):
     def download_file(self, attachment):
         return {
             'type': 'ir.actions.act_url',
-            'name': 'excel_template',
+            'name': 'download_file',
             'url': '/web/image?model=ir.attachment&field=datas&id=%s&filename=%s' 
                         % (attachment.id, attachment.name),
             'target': 'new',
@@ -107,7 +106,6 @@ class Lead(models.Model):
         for sheet in book.sheets():
             try:
                 line_vals = []
-            
                 for row in range(sheet.nrows):
                     if row >= 1:
                         row_values = sheet.row_values(row)

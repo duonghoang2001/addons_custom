@@ -33,6 +33,9 @@
                         </form>
                     </page>
                 </xpath>
+                <xpath expr="//button[@name='%(crm.crm_lead_lost_action)d']" position="after">
+                    <button string="Export Requests" name="download_requests" type="object" class="oe_highlight"/>
+                </xpath>
             </field>
         </record>
     </data>

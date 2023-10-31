@@ -2,10 +2,13 @@
 
 import base64
 import datetime
+import os.path
 import xlrd
+from xlsxwriter import Workbook
+from io import BytesIO
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.modules.module import get_module_resource
+from odoo.modules.module import get_module_path, get_module_resource
 
 class Lead(models.Model):
     _inherit = ['crm.lead']
@@ -24,6 +27,7 @@ class Lead(models.Model):
     excel_file = fields.Binary(string='Upload File')
     excel_file_name = fields.Char(string='Filename')
     excel_template = fields.Many2one('ir.attachment', string='Request File Template', compute='_compute_excel_template')
+    excel_data = fields.Many2one('ir.attachment', string='Request Data', compute='_compute_excel_data')
     
     @api.depends('request_ids.qty')
     def _compute_total_sale(self):
@@ -43,7 +47,7 @@ class Lead(models.Model):
             lead.is_new_stage = lead.stage_id.id == new_stage_id
 
     def _compute_excel_template(self):
-        file_path = get_module_resource('crm_customer_request', 'static/xls/', 'requests_template.xls')
+        file_path = get_module_resource('crm_customer_request', 'static', 'requests_template.xlsx')
         self.excel_template = self.env['ir.attachment'].create({
             'name': 'excel_template',
             'type': 'binary',
@@ -51,15 +55,50 @@ class Lead(models.Model):
             'res_id': self.id
         })
 
-    def download_template(self):
+    @api.depends('request_ids.description', 'request_ids.date', 'request_ids.qty', 
+                 'request_ids.product_id', 'request_ids.product_id.name',
+                 'request_ids.opportunity_id', 'request_ids.opportunity_id.name')
+    def _compute_excel_data(self):
+        # excel_file_path = os.path.join(get_module_path('crm_customer_request'), 
+        #                                'static', 'request_data.xlsx')
+        in_memory_fp = BytesIO()
+        with Workbook(in_memory_fp) as workbook:
+            worksheet = workbook.add_worksheet()
+            headers = ['Product', 'Opportunity', 'Date', 'Description', 'Quantity']
+            worksheet.write_row(row=0, col=0, data=headers)
+            for i in range(len(self.request_ids)):
+                request = self.request_ids[i]
+                row = [request.product_id.name, 
+                       request.opportunity_id.name, 
+                       request.date.strftime('%d/%m/%Y'), 
+                       request.description if request.description else '', 
+                       request.qty]
+                worksheet.write_row(row=i + 1, col=0, data=row)
+
+        # file_path = get_module_resource('crm_customer_request', 'static', 'request_data.xlsx')
+        in_memory_fp.seek(0,0)
+        self.excel_data = self.env['ir.attachment'].create({
+            'name': 'excel_requests',
+            'type': 'binary',
+            'datas': base64.b64encode(in_memory_fp.read()),
+            'res_id': self.id
+        })
+
+    def download_file(self, attachment):
         return {
             'type': 'ir.actions.act_url',
             'name': 'excel_template',
             'url': '/web/image?model=ir.attachment&field=datas&id=%s&filename=%s' 
-                        % (self.excel_template.id, self.excel_template.name),
+                        % (attachment.id, attachment.name),
             'target': 'new',
         }
 
+    def download_template(self):
+        return self.download_file(self.excel_template)
+    
+    def download_requests(self):
+        return self.download_file(self.excel_data)
+    
     def import_excels(self):
         # Read uploaded excel file
         try:
@@ -108,6 +147,6 @@ class Lead(models.Model):
 
             return request_line
         else:
-            error_message = _("Product %s is not available!", record[0])
+            error_message = _("Product '%s' is not available!", record[0])
             raise ValidationError(error_message)
-                
+        

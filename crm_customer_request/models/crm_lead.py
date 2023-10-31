@@ -2,13 +2,12 @@
 
 import base64
 import datetime
-import os.path
 import xlrd
 from xlsxwriter import Workbook
 from io import BytesIO
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.modules.module import get_module_path, get_module_resource
+from odoo.modules.module import get_module_resource
 
 class Lead(models.Model):
     _inherit = ['crm.lead']
@@ -59,8 +58,7 @@ class Lead(models.Model):
                  'request_ids.product_id', 'request_ids.product_id.name',
                  'request_ids.opportunity_id', 'request_ids.opportunity_id.name')
     def _compute_excel_data(self):
-        # excel_file_path = os.path.join(get_module_path('crm_customer_request'), 
-        #                                'static', 'request_data.xlsx')
+        # Save as file object
         in_memory_fp = BytesIO()
         with Workbook(in_memory_fp) as workbook:
             worksheet = workbook.add_worksheet()
@@ -75,7 +73,6 @@ class Lead(models.Model):
                        request.qty]
                 worksheet.write_row(row=i + 1, col=0, data=row)
 
-        # file_path = get_module_resource('crm_customer_request', 'static', 'request_data.xlsx')
         in_memory_fp.seek(0,0)
         self.excel_data = self.env['ir.attachment'].create({
             'name': 'excel_requests',

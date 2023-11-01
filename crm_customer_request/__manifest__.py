@@ -40,4 +40,6 @@
     ],
 
     'license': 'LGPL-3',
+
+    'application': True,
 }

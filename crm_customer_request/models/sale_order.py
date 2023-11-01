@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, api
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = 'sale.order' 
 
     @api.model
     def default_get(self, fields):

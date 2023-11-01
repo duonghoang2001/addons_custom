@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <record id="crm_customer_request_form" model="ir.ui.view">
-            <field name="name">crm.customer.request.form</field>
+            <field name="name">crm_customer_request_form</field>
             <field name="model">crm.customer.request</field>
             <field name="arch" type="xml">
                 <tree string="Request" editable="bottom">

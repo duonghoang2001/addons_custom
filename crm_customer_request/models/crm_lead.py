@@ -12,21 +12,24 @@ from odoo.modules.module import get_module_resource
 class Lead(models.Model):
     _inherit = ['crm.lead']
 
-    request_ids = fields.One2many('crm.customer.request', 'opportunity_id', 
-                                  string='Requests')
-    total_sale = fields.Float(string='Total Sale', compute='_compute_total_sale', 
-                              store=True)
-    total_expected_revenue = fields.Monetary(string='Total Expected Revenue', 
-                                             currency_field='company_currency',
-                                             compute='_compute_total_expected_revenue',
-                                             store=True)
+    request_ids = fields.One2many(
+        'crm.customer.request', 'opportunity_id', string='Requests')
+    total_sale = fields.Float(
+        string='Total Sale', compute='_compute_total_sale', store=True)
+    total_expected_revenue = fields.Monetary(
+        string='Total Expected Revenue', currency_field='company_currency',
+        compute='_compute_total_expected_revenue', store=True)
     # Stage
-    is_new_stage = fields.Boolean(string='Is New Stage?', compute='_compute_is_new_stage')
+    is_new_stage = fields.Boolean(
+        string='Is New Stage?', compute='_compute_is_new_stage')
     # Excel file upload/download
     excel_file = fields.Binary(string='Upload File')
     excel_file_name = fields.Char(string='Filename')
-    excel_template = fields.Many2one('ir.attachment', string='Request File Template', compute='_compute_excel_template')
-    excel_data = fields.Many2one('ir.attachment', string='Request Data', compute='_compute_excel_data')
+    excel_template = fields.Many2one(
+        'ir.attachment', string='Request File Template', 
+        compute='_compute_excel_template')
+    excel_data = fields.Many2one(
+        'ir.attachment', string='Request Data', compute='_compute_excel_data')
     
     @api.depends('request_ids.qty')
     def _compute_total_sale(self):
@@ -46,7 +49,8 @@ class Lead(models.Model):
             lead.is_new_stage = lead.stage_id.id == new_stage_id
 
     def _compute_excel_template(self):
-        file_path = get_module_resource('crm_customer_request', 'static', 'requests_template.xlsx')
+        file_path = get_module_resource(
+            'crm_customer_request', 'static', 'requests_template.xlsx')
         self.excel_template = self.env['ir.attachment'].create({
             'name': 'excel_template',
             'type': 'binary',
@@ -121,7 +125,8 @@ class Lead(models.Model):
 
     def create_request_entry(self, record):
         # Search for product ID using product's name
-        product_id = self.env['product.template'].search([('name', '=', record[0])], limit=1).id
+        product_id = self.env['product.template'].search(
+            [('name', '=', record[0])], limit=1).id
         # Only add valid fields, invalid ones would be left as default values
         if product_id:
             request_line = {

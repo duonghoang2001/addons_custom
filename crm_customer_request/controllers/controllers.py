@@ -23,7 +23,8 @@ class CrmCustomerRequest(http.Controller):
             new_lead['partner_id'] = partner_id
         # Expected closing date
         if kw['date_deadline']:
-            new_lead['date_deadline'] = datetime.datetime.strptime(kw['date_deadline'], '%d/%m/%Y').date()
+            new_lead['date_deadline'] = datetime.datetime.strptime(
+                kw['date_deadline'], '%d/%m/%Y').date()
 
         # Create lead
         new_lead_id = request.env['crm.lead'].sudo().create(new_lead).id
@@ -41,7 +42,8 @@ class CrmCustomerRequest(http.Controller):
                     'qty': kw['requests'][i]['quantity'],
                 }
                 if kw['requests'][i]['date']:
-                    request_line['date'] = datetime.datetime.strptime(kw['requests'][i]['date'], '%d/%m/%Y').date() 
+                    request_line['date'] = datetime.datetime.strptime(
+                        kw['requests'][i]['date'], '%d/%m/%Y').date() 
                 request_lines.append((0, 0, request_line))
         lead.update({
             'request_ids': request_lines

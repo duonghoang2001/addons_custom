@@ -42,22 +42,6 @@ class Lead(models.Model):
             revenues = [request.qty * request.product_id.list_price for request in lead.request_ids]
             lead.total_expected_revenue = sum(revenues)
 
-    def _compute_is_new_stage(self):
-        # Check whether current stage is 'New' (stage_id = 1)
-        for lead in self:
-            new_stage_id = lead.env.ref('crm.stage_lead1').id
-            lead.is_new_stage = lead.stage_id.id == new_stage_id
-
-    def _compute_excel_template(self):
-        file_path = get_module_resource(
-            'crm_customer_request', 'static', 'requests_template.xlsx')
-        self.excel_template = self.env['ir.attachment'].create({
-            'name': 'excel_template',
-            'type': 'binary',
-            'datas': base64.b64encode(open(file_path, 'rb').read()),
-            'res_id': self.id
-        })
-
     @api.depends('request_ids.description', 'request_ids.date', 'request_ids.qty', 
                  'request_ids.product_id.name', 'request_ids.opportunity_id.name')
     def _compute_excel_data(self):
@@ -81,6 +65,22 @@ class Lead(models.Model):
             'name': 'excel_requests',
             'type': 'binary',
             'datas': base64.b64encode(in_memory_fp.read()),
+            'res_id': self.id
+        })
+
+    def _compute_is_new_stage(self):
+        # Check whether current stage is 'New' (stage_id = 1)
+        for lead in self:
+            new_stage_id = lead.env.ref('crm.stage_lead1').id
+            lead.is_new_stage = lead.stage_id.id == new_stage_id
+
+    def _compute_excel_template(self):
+        file_path = get_module_resource(
+            'crm_customer_request', 'static', 'requests_template.xlsx')
+        self.excel_template = self.env['ir.attachment'].create({
+            'name': 'excel_template',
+            'type': 'binary',
+            'datas': base64.b64encode(open(file_path, 'rb').read()),
             'res_id': self.id
         })
 
@@ -137,9 +137,11 @@ class Lead(models.Model):
                     date = datetime.datetime.strptime(record[1], '%d/%m/%Y').date()
                     request_line['date'] = date
                 except ValueError:
-                    pass
+                    error_message = _("%s is of incorrect Date format", record[1])
+                    raise ValidationError(error_message)
                 except TypeError:
-                    pass
+                    error_message = _("Incorrect Date type was provided: %s", record[1])
+                    raise ValidationError(error_message)
             if record[2]:
                 request_line['description'] = record[2]
             if type(record[3]) in (int, float):

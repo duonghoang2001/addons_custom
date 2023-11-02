@@ -3,8 +3,10 @@
 import base64
 import datetime
 import xlrd
-from xlsxwriter import Workbook
+
 from io import BytesIO
+from xlsxwriter import Workbook
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
@@ -76,7 +78,7 @@ class Lead(models.Model):
 
     def _compute_excel_template(self):
         file_path = get_module_resource(
-            'crm_customer_request', 'static', 'requests_template.xlsx')
+            'crm_customer_request', 'static/xls', 'requests_template.xlsx')
         self.excel_template = self.env['ir.attachment'].create({
             'name': 'excel_template',
             'type': 'binary',
@@ -132,7 +134,7 @@ class Lead(models.Model):
             request_line = {
                 'product_id': product_id
             }
-            if record[1]:
+            if record[1]: # Convert string (if provided, else use default) to date
                 try:
                     date = datetime.datetime.strptime(record[1], '%d/%m/%Y').date()
                     request_line['date'] = date

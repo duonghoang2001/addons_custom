@@ -7,6 +7,7 @@ class CustomerRequest(models.Model):
     _name = 'crm.customer.request'
     _order = 'create_date desc'
     _description = "Customer's Requests"
+    _rec_name = 'opportunity_id'
 
     product_id = fields.Many2one(
         'product.template', string='Product', required=True, 

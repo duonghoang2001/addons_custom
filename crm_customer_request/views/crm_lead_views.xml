@@ -30,7 +30,7 @@
                                 <span><strong>Total Expected Revenue: </strong></span>
                                 <field name="total_expected_revenue"/>
                             </div>   
-                            <field name="description" widget="new_widget"/> 
+                            <field name="description" widget="new_widget" background_color="purple"/> 
                         </form>
                     </page>
                 </xpath>

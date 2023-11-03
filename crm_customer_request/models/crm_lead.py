@@ -16,6 +16,9 @@ class Lead(models.Model):
 
     request_ids = fields.One2many(
         'crm.customer.request', 'opportunity_id', string='Requests')
+    product_set_ids = fields.One2many(
+        'product.set', 'opportunity_id', string='Product Sets'
+    )
     total_sale = fields.Float(
         string='Total Sale', compute='_compute_total_sale', store=True)
     total_expected_revenue = fields.Monetary(

@@ -31,12 +31,19 @@
         'demo/demo.xml',
     ],
 
-    'qweb': [
-    ],
-
     'data': [
         'security/ir.model.access.csv',
         'views/crm_customer_request_views.xml',
-        'views/crm_lead_views.xml'
+        'views/crm_lead_views.xml',
+        'views/product_set_views.xml',
     ],
+
+    'assets': {
+        'web.assets_backend' : [
+            'crm_customer_request/static/src/views/js/widget_file.js',
+        ],
+        'web.assets_qweb' : [
+            'crm_cutomer_request/static/src/views/xml/widget_file.xml',
+        ],
+    },
 }

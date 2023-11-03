@@ -29,12 +29,21 @@
                             <div>
                                 <span><strong>Total Expected Revenue: </strong></span>
                                 <field name="total_expected_revenue"/>
-                            </div>    
+                            </div>   
+                            <field name="description" widget="new_widget"/> 
                         </form>
                     </page>
                 </xpath>
                 <xpath expr="//button[@name='%(crm.crm_lead_lost_action)d']" position="after">
                     <button string="Export Requests" name="download_requests" type="object" class="oe_highlight"/>
+                </xpath>
+                <xpath expr="//page[@name='internal_notes']" position="before">
+                    <page string="Product Sets" name="product_sets">
+                        <form>
+                            <field name="product_set_ids"
+                                context="{'set': 'product_set'}"/>
+                        </form>
+                    </page>
                 </xpath>
             </field>
         </record>

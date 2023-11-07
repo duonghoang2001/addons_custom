@@ -13,20 +13,15 @@ export class MyNewWidget extends Component {
 
 MyNewWidget.template = "crm_customer_request.MyNewWidget";
 
-MyNewWidget.defaultProps = {
-    backgroundColor: "primary",
-}
 // Spread standard field props and add custom props
 MyNewWidget.props = {
     ...standardFieldProps,
     placeholder: {type: String, optional: true},
-    backgroundColor: {type: String, optional: true},
 };
 
-MyNewWidget.extractProps = ({attrs,field}) => {
+MyNewWidget.extractProps = ({attrs, field}) => {
     return {
         placeholder: attrs.placeholder,
-        backgroundColor: attrs.background_color,
     };
 };
 

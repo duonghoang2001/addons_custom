@@ -24,6 +24,7 @@ class Lead(models.Model):
     total_expected_revenue = fields.Monetary(
         string='Total Expected Revenue', currency_field='company_currency',
         compute='_compute_total_expected_revenue', store=True)
+    comment = fields.Html(string='Brief Comment')
     # Stage
     is_new_stage = fields.Boolean(
         string='Is New Stage?', compute='_compute_is_new_stage')

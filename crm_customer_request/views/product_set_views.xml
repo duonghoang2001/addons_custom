@@ -22,6 +22,7 @@
                     <page string="Bundle" attrs="{'invisible': [('bundle_ok','=',False)]}" name="bundle">
                         <group name="bundle">
                             <group string="Discount Offer" name="discount_offer">
+                                <field name="list_price" widget="monetary"/>
                                 <field name="discount" widget="monetary"/>
                                 <field name="discount_rate" widget="percentage"/>
                                 <field name="discount_price" widget="monetary"/>

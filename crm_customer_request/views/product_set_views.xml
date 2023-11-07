@@ -19,9 +19,13 @@
                     </span>
                 </xpath>
                 <xpath expr="//page[@name='sales']" position="after">
-                    <page string="Bundle" attrs="{'invisible': [('bundle_ok','=',False)]}" name="bundle" invisible="1">
+                    <page string="Bundle" attrs="{'invisible': [('bundle_ok','=',False)]}" name="bundle">
                         <group name="bundle">
-                            <group string="Product Quantity in Set" name="qty"/>
+                            <group string="Discount Offer" name="discount_offer">
+                                <field name="discount" widget="monetary"/>
+                                <field name="discount_rate" widget="percentage"/>
+                                <field name="discount_price" widget="monetary"/>
+                            </group>
                         </group>
                     </page>
                 </xpath>

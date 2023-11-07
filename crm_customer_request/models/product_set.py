@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields
+from odoo import api, fields, models
 
 # We want to _inherits from the parent model and we add some fields
 # in the child object
@@ -11,14 +11,29 @@ class ProductSet(models.Model):
     _description = 'Product Set'
 
     product_template_id = fields.Many2one(
-        'product.template', string='Related Product', required=True, 
-        ondelete='cascade', help="Product that the Set related to.")
+        'product.template', string='Product Template', required=True, 
+        ondelete='cascade', help="For Delegation Inheritance.")
     bundle_ok = fields.Boolean(string='Can be Bundled?', default=True)
-    qty = fields.Integer(string='Quantity', default=1, help="Quantity of products contained in the set.")
+    discount = fields.Float(string='Discount Amount', default=0)
+    discount_rate = fields.Float(
+        string='Discount Rate', compute='_compute_discount_percentage')
+    discount_price = fields.Float(
+        string='Discounted Price', compute='_compute_discount_price',
+        help="It's more economical to buy listed products together instead of buying them individually.")
     opportunity_id = fields.Many2one(
         'crm.lead', string='Related Opportunity'
     )
     
+    @api.onchange('discount', 'list_price')
+    def _compute_discount_percentage(self):
+        for record in self:
+            record.discount_rate = record.discount / record.list_price if self.discount > 0 else 0
+    
+    @api.onchange('discount', 'list_price')
+    def _compute_discount_price(self):
+        for record in self:
+            record.discount_price = record.list_price - record.discount
+
     def action_open_label_layout(self):
         action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
         action['context'] = {'default_product_tmpl_ids': self.ids}

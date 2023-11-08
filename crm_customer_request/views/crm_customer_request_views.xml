@@ -1,7 +1,7 @@
 <odoo>
     <data>
-        <record id="crm_customer_request_form" model="ir.ui.view">
-            <field name="name">crm_customer_request_form</field>
+        <record id="crm_customer_request_tree_view" model="ir.ui.view">
+            <field name="name">crm_customer_request_tree_view</field>
             <field name="model">crm.customer.request</field>
             <field name="arch" type="xml">
                 <tree string="Request" editable="bottom">
@@ -11,6 +11,17 @@
                     <field name="description"/>
                     <field name="qty"/>
                 </tree>
+            </field>
+        </record>
+        <record id="crm_customer_request_search_view" model="ir.ui.view">
+            <field name="name">crm_customer_request_search_view</field>
+            <field name="model">crm.customer.request</field>
+            <field name="arch" type="xml">
+                <search string="Search Customer Request">
+                    <field name="product_id" string="Product" domain="[]"/>
+                    <field name="opportunity_id" string="Opportunity" domain="[]"/>
+                    <field name="date"/>
+                </search>
             </field>
         </record>
     </data>

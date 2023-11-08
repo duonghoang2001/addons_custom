@@ -33,9 +33,11 @@
 
     'data': [
         'security/ir.model.access.csv',
+
         'views/crm_customer_request_views.xml',
         'views/crm_lead_views.xml',
         'views/product_set_views.xml',
+        'views/crm_menu_views.xml'
     ],
 
     'assets': {

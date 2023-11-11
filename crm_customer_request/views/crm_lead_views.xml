@@ -30,7 +30,9 @@
                                 <span><strong>Total Expected Revenue: </strong></span>
                                 <field name="total_expected_revenue"/>
                             </div>   
-                            <field name="comment" widget="new_widget"/> 
+                            <div>
+                                <field name="todo" widget="todo_list"/>
+                            </div>
                         </form>
                     </page>
                 </xpath>

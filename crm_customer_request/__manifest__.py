@@ -42,10 +42,14 @@
 
     'assets': {
         'web.assets_backend' : [
-            'crm_customer_request/static/src/views/js/widget_file.js',
+            'crm_customer_request/static/src/js/utils.js',
+            'crm_customer_request/static/src/js/todo.js',
+            'crm_customer_request/static/src/js/todo_list.js',
+
+            'crm_customer_request/static/src/xml/*',
         ],
-        'web.assets_qweb' : [
-            'crm_cutomer_request/static/src/views/xml/widget_file.xml',
-        ],
+        'web.asset_common' : [
+            'web/static/src/libs/fontawesome/css/font-awesome.css', # required for fa icons
+        ]
     },
 }

@@ -11,16 +11,20 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
 
-class Lead(models.Model):
+class CrmLead(models.Model):
     _inherit = ['crm.lead']
 
     request_ids = fields.One2many(
         'crm.customer.request', 'opportunity_id', string='Requests')
+    product_set_ids = fields.One2many(
+        'product.set', 'opportunity_id', string='Product Sets'
+    )
     total_sale = fields.Float(
         string='Total Sale', compute='_compute_total_sale', store=True)
     total_expected_revenue = fields.Monetary(
         string='Total Expected Revenue', currency_field='company_currency',
         compute='_compute_total_expected_revenue', store=True)
+    todo = fields.Html(string="To do")
     # Stage
     is_new_stage = fields.Boolean(
         string='Is New Stage?', compute='_compute_is_new_stage')
@@ -86,6 +90,7 @@ class Lead(models.Model):
             'res_id': self.id
         })
 
+    # download specified file attachment
     def download_file(self, attachment):
         return {
             'type': 'ir.actions.act_url',
@@ -95,12 +100,15 @@ class Lead(models.Model):
             'target': 'new',
         }
 
+    # download request excel template when button clicked
     def download_template(self):
         return self.download_file(self.excel_template)
     
+    # download all request data as excel file when button clicked 
     def download_requests(self):
         return self.download_file(self.excel_data)
     
+    # handle user uploaded excel data file
     def import_excels(self):
         # Read uploaded excel file
         try:
@@ -124,7 +132,8 @@ class Lead(models.Model):
                     })
             except IndexError:
                 pass
-
+    
+    # create a request line based on an excel file's row data
     def create_request_entry(self, record):
         # Search for product ID using product's name
         product_id = self.env['product.template'].search(

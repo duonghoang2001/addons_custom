@@ -31,12 +31,25 @@
         'demo/demo.xml',
     ],
 
-    'qweb': [
-    ],
-
     'data': [
         'security/ir.model.access.csv',
+
         'views/crm_customer_request_views.xml',
-        'views/crm_lead_views.xml'
+        'views/crm_lead_views.xml',
+        'views/product_set_views.xml',
+        'views/crm_customer_request_menus.xml'
     ],
+
+    'assets': {
+        'web.assets_backend' : [
+            'crm_customer_request/static/src/js/utils.js',
+            'crm_customer_request/static/src/js/todo.js',
+            'crm_customer_request/static/src/js/todo_list.js',
+
+            'crm_customer_request/static/src/xml/*',
+        ],
+        'web.asset_common' : [
+            'web/static/src/libs/fontawesome/css/font-awesome.css', # required for fa icons
+        ]
+    },
 }

@@ -3,7 +3,7 @@
 from odoo import models, fields
 
 
-class CustomerRequest(models.Model):
+class CrmCustomerRequest(models.Model):
     _name = 'crm.customer.request'
     _order = 'create_date desc'
     _description = "Customer's Requests"

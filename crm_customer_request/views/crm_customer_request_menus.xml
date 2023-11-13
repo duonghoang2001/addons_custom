@@ -3,10 +3,10 @@
 
     <!-- Add an item to CRM Sales menu -->
     <menuitem
-        id="crm_customer_request_menu_request"
+        id="crm_customer_request_menu"
         name="Customer Requests"
         parent="crm.crm_menu_sales"
-        action="crm_lead_action_customer_request"
+        action="crm_customer_request_action"
         sequence="6"/>
 
 </odoo>

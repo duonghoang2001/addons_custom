@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="crm_customer_request_product_set_view_form_inherit" model="ir.ui.view">
-            <field name="name">crm_customer_request_product_set_view_form_inherit</field>
+        <record id="crm_customer_request_product_set_form_view_inherit" model="ir.ui.view">
+            <field name="name">crm_customer_request_product_set_form_view_inherit</field>
             <field name="model">product.set</field>
             <field name="mode">primary</field>
             <field eval="7" name="priority"/>

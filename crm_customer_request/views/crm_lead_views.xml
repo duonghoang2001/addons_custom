@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="crm_customer_request_crm_lead_view_form_inherit" model="ir.ui.view">
-            <field name="name">crm_customer_request_crm_lead_view_form_inherit</field>
+        <record id="crm_customer_request_crm_lead_form_view_inherit" model="ir.ui.view">
+            <field name="name">crm_customer_request_crm_lead_form_view_inherit</field>
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_lead_view_form"/>
             <field name="arch" type="xml">
@@ -48,32 +48,6 @@
                     </page>
                 </xpath>
             </field>
-        </record>
-
-        <!-- Customer Requests Menu -->
-        <record id="crm_lead_action_customer_request" model="ir.actions.act_window">
-            <field name="name">Customer Requests</field>
-            <field name="res_model">crm.customer.request</field>
-            <field name="view_mode">tree,kanban,graph,pivot,form</field>
-            <field name="view_id" ref="crm_customer_request.crm_customer_request_tree_view"/>
-            <field name="domain">[('opportunity_id','!=',False)]</field>
-            <field name="search_view_id" ref="crm_customer_request.crm_customer_request_search_view"/>
-            <field name="context">{
-                    'search_default_assigned_to_me': 1}
-            </field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Looks like there is no request.
-                </p><p>
-                    Create customer requests for the opportunity.
-                </p>
-            </field>
-        </record>
-        <record id="crm_lead_action_customer_request_view_tree" model="ir.actions.act_window.view">
-            <field name="sequence">1</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="crm_customer_request.crm_customer_request_tree_view"/>
-            <field name="act_window_id" ref="crm_lead_action_customer_request"/>
         </record>
     </data>
 </odoo>
